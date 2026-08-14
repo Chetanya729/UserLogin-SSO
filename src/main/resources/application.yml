@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: SSO-project
+  security:
+    jwt:
+      secret-key: "3+kOi4rFKIYEvkL5ViNC0OvX9yIYBGsx6igcYz3mHkg="
+      expiration: 3600000
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope: openid, profile, email
