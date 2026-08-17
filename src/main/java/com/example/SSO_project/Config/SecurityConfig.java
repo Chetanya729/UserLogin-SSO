@@ -1,16 +1,23 @@
 package com.example.SSO_project.Config;
 
+import com.example.SSO_project.Service.CustomOAuth2UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final RoleBasedAuthenticationSuccessHandler successHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -22,11 +29,14 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login").permitAll()
-                        .requestMatchers("/oath2/**","/login/oath2/**").permitAll()
+                        .requestMatchers("/oauth2/**","/login/oauth2/**").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/", "/register", "/register/**").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/home", true)
+                        .successHandler(successHandler)
                         .permitAll())
                 .logout(logout -> logout
                         .logoutUrl("/logout")
@@ -34,8 +44,9 @@ public class SecurityConfig {
                         .permitAll())
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
-                        .defaultSuccessUrl("/home",true))
-                .csrf(csrf -> csrf.disable());
+                        .userInfoEndpoint(userInfo -> userInfo.oidcUserService(customOAuth2UserService))
+                        .successHandler(successHandler))
+                .csrf(AbstractHttpConfigurer::disable);
         return http.build();
     }
 }

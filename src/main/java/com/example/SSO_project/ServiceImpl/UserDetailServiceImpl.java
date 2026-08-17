@@ -1,46 +1,48 @@
 package com.example.SSO_project.ServiceImpl;
 
+import com.example.SSO_project.Repository.UserRepository;
 import com.example.SSO_project.Service.UserDetailService;
 import com.example.SSO_project.domain.User;
+import com.example.SSO_project.domain.UserRegister;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Service
+@RequiredArgsConstructor
 public class UserDetailServiceImpl implements UserDetailService {
 
-    private static final PasswordEncoder ENCODER = new BCryptPasswordEncoder();
-
-    private static final Map<String, String> users = new HashMap<>();
-    static {
-        users.put("[EnterUsername]", ENCODER.encode("[EnterPassword]"));
-    }
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public User authenticate(String username, String password) {
-        String storedPassword = users.get(username);
-        if (storedPassword != null && ENCODER.matches(password, storedPassword)) {
-            return new User(username, null);
+        UserRegister entity = userRepository.findByUsername(username).orElse(null);
+        if (entity == null || entity.getPassword() == null) {
+            return null;
         }
-        return null;
+        if (!passwordEncoder.matches(password, entity.getPassword())) {
+            return null;
+        }
+        return new User(entity.getUsername(), null);
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        String storedPassword = users.get(username);
-        if (storedPassword != null) {
-            return org.springframework.security.core.userdetails.User.builder()
-                    .username(username)
-                    .password(storedPassword)
-                    .roles("USER")
-                    .build();
-        } else {
-            throw new UsernameNotFoundException("username not found");
+        UserRegister entity = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("username not found: " + username));
+
+        if (entity.getPassword() == null) {
+            throw new UsernameNotFoundException(
+                    "user registered via external provider; please sign in with that provider");
         }
+
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(entity.getUsername())
+                .password(entity.getPassword())
+                .roles(entity.getRole().name())
+                .build();
     }
 }

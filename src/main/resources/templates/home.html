@@ -3,16 +3,30 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Home</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-    <h1>Home</h1>
+<main class="card">
+    <div class="brand">S</div>
+    <div class="card-header center">
+        <h1>You're signed in</h1>
+        <p class="subtitle">Welcome to your account</p>
+    </div>
 
-    <p>Signed in as <strong sec:authentication="name">user</strong>.</p>
-    <p>Roles: <span sec:authentication="principal.authorities">[ROLE_USER]</span></p>
+    <div class="info-panel">
+        <span class="label">Signed in as</span>
+        <span class="value" sec:authentication="name">user</span>
+    </div>
+    <div class="info-panel">
+        <span class="label">Role</span>
+        <span class="value" sec:authentication="principal.authorities">[ROLE_USER]</span>
+    </div>
 
     <form th:action="@{/logout}" method="post">
-        <button type="submit">Log out</button>
+        <button type="submit" class="btn btn-secondary">Sign out</button>
     </form>
+</main>
 </body>
 </html>

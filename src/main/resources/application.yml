@@ -12,3 +12,26 @@ spring:
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
             scope: openid, profile, email
+  datasource:
+    url: jdbc:mysql://localhost:3306/userDbSSOProject?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+    username: "${DATABASE_USERNAME:root}"
+    password: "${DATABASE_PASSWORD:}"
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: TRACE
+    org.springframework.web: DEBUG
+  logging:
+    level:
+      org.springframework.security: DEBUG
+      org.springframework.security.oauth2: TRACE
+      org.springframework.web: DEBUG
