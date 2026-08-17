@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Welcome</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<main class="card">
+    <div class="brand">S</div>
+    <div class="card-header center">
+        <h1>Welcome</h1>
+        <p class="subtitle">Sign in or create an account to continue.</p>
+    </div>
+
+    <div class="actions">
+        <a th:href="@{/login}" class="btn">Sign in</a>
+        <a th:href="@{/register}" class="btn btn-secondary">Create account</a>
+    </div>
+</main>
+</body>
+</html>

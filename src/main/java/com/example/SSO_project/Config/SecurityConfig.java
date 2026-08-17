@@ -1,6 +1,7 @@
 package com.example.SSO_project.Config;
 
 import com.example.SSO_project.Service.CustomOAuth2UserService;
+import com.example.SSO_project.Service.CustomOidcUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomOidcUserService customOidcUserService;
     private final RoleBasedAuthenticationSuccessHandler successHandler;
 
     @Bean
@@ -44,7 +46,9 @@ public class SecurityConfig {
                         .permitAll())
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
-                        .userInfoEndpoint(userInfo -> userInfo.oidcUserService(customOAuth2UserService))
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .oidcUserService(customOidcUserService)
+                                .userService(customOAuth2UserService))
                         .successHandler(successHandler))
                 .csrf(AbstractHttpConfigurer::disable);
         return http.build();

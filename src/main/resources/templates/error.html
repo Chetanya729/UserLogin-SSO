@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Error</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<main class="card">
+    <div class="brand">!</div>
+    <div class="card-header center">
+        <h1>Something went wrong</h1>
+        <p class="subtitle" th:text="${error} ?: 'An unexpected error occurred.'">An unexpected error occurred.</p>
+    </div>
+
+    <a th:href="@{/login}" class="btn btn-secondary">Back to sign in</a>
+</main>
+</body>
+</html>

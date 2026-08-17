@@ -1,0 +1,46 @@
+services:
+  # ---------- MySQL database ----------
+  db:
+    image: mysql:8
+    container_name: sso-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpass}
+      MYSQL_DATABASE: userDbSSOProject
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DB_ROOT_PASSWORD:-rootpass}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # ---------- Spring Boot app ----------
+  app:
+    build: .
+    container_name: sso-app
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # Point Spring at the db container (service name = hostname on the internal network)
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/userDbSSOProject?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ${DB_ROOT_PASSWORD:-rootpass}
+
+      # OAuth secrets — read from your shell env or a .env file next to this compose file
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      GIT_CLIENT_ID: ${GIT_CLIENT_ID}
+      GIT_CLIENT_SECRET: ${GIT_CLIENT_SECRET}
+      FACEBOOK_CLIENT_ID: ${FACEBOOK_CLIENT_ID}
+      FACEBOOK_CLIENT_SECRET: ${FACEBOOK_CLIENT_SECRET}
+
+volumes:
+  mysql_data:

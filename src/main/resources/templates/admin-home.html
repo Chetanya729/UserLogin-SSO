@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<main class="card">
+    <div class="brand">S</div>
+    <div class="card-header center">
+        <h1>Admin dashboard <span class="badge">Admin</span></h1>
+        <p class="subtitle">You have administrator access</p>
+    </div>
+
+    <div class="info-panel">
+        <span class="label">Signed in as</span>
+        <span class="value" sec:authentication="name">admin</span>
+    </div>
+    <div class="info-panel">
+        <span class="label">Authorities</span>
+        <span class="value" sec:authentication="principal.authorities">[ROLE_ADMIN]</span>
+    </div>
+
+    <form th:action="@{/logout}" method="post">
+        <button type="submit" class="btn btn-secondary">Sign out</button>
+    </form>
+</main>
+</body>
+</html>
