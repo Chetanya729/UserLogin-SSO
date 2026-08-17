@@ -86,9 +86,6 @@ Seed users are defined in `UserDetailServiceImpl` (hashed at startup):
 | Username | Password |
 |----------|----------|
 | chetanya | chetanya123 |
-| rahul    | rahul123 |
-| kumar    | kumar123 |
-| dog      | dog123 |
 
 Or click **Sign in with Google** to authenticate through your Google account.
 
