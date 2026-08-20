@@ -1,12 +1,14 @@
 package com.example.SSO_project.Controller;
 
 import com.example.SSO_project.Service.PasswordResetService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Controller
 @RequiredArgsConstructor
@@ -18,9 +20,14 @@ public class PasswordResetController {
     public String passwordResetPage() {
         return "forgot-password";
     }
+
     @PostMapping("/forgot-password")
-    public String submit(@RequestParam("email") String email, Model model) {
-        passwordResetService.createTokenAndSendEmail(email);
+    public String submit(@RequestParam("email") String email, Model model, HttpServletRequest httpServletRequest) {
+        String baseUrl = httpServletRequest.getScheme() + "://" + httpServletRequest.getServerName()
+                +(httpServletRequest.getServerPort() == 80 || httpServletRequest.getServerPort() == 443 ? "" : ":" + httpServletRequest.getServerPort() );
+
+
+        passwordResetService.createTokenAndSendEmail(email , baseUrl);
 
         model.addAttribute("message",
                 "If an account exists for that email, we've sent a reset link. Check your inbox.");

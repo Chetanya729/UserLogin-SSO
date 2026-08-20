@@ -16,6 +16,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -30,9 +31,6 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
-    @Value("${app.base-url}")
-    private String baseUrl;
-
     @Value("${app.password-reset.token-validity-minutes:15}")
     private long tokenValidityMinutes;
 
@@ -42,7 +40,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
 
     @Override
     @Transactional
-    public void createTokenAndSendEmail(String email) {
+    public void createTokenAndSendEmail(String email, String baseUrl) {
         Optional<UserRegister> MaybeUser = userRepository.findByEmail(email);
         if (MaybeUser.isEmpty() || MaybeUser.get().getPassword() == null) {
             log.info("No user found with email {}", email);
@@ -85,6 +83,10 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     }
 
     private void sendEmail(String toAddress, String tokenValue) {
+        String resetUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/reset-password")
+                .queryParam("token",tokenValue)
+                .toUriString();
        try{
            SimpleMailMessage mailMessage = new SimpleMailMessage();
            mailMessage.setFrom(fromAddress);
@@ -93,7 +95,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
            mailMessage.setText(
                    "Someone requested a password reset for your account.\n\n" +
                            "Click the link below to set a new password:\n" +
-                           baseUrl + "/reset-password?token=" + tokenValue + "\n\n" +
+                           resetUrl + "/reset-password?token=" + tokenValue + "\n\n" +
                            "This link expires in " + tokenValidityMinutes + " minutes.\n" +
                            "If you didn't request this, you can safely ignore this email."
            );
