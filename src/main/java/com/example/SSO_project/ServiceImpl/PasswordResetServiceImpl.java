@@ -34,7 +34,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     @Value("${app.password-reset.token-validity-minutes:15}")
     private long tokenValidityMinutes;
 
-    @Value("${MAIL_USERNAME}")
+    @Value("${app.mail.from}")
     private String fromAddress;
 
 
