@@ -82,6 +82,24 @@ label {
     color: #3a3a3d;
 }
 
+.field-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.inline-link {
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-decoration: none;
+}
+
+.inline-link:hover {
+    color: var(--text);
+    text-decoration: underline;
+}
+
 input[type="text"],
 input[type="email"],
 input[type="password"] {
