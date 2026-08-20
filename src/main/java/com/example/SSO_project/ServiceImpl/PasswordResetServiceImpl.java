@@ -43,7 +43,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     public void createTokenAndSendEmail(String email, String baseUrl) {
         Optional<UserRegister> MaybeUser = userRepository.findByEmail(email);
         if (MaybeUser.isEmpty() || MaybeUser.get().getPassword() == null) {
-            log.info("No user found with email {}", email);
+            log.error("No user found with email {}", email);
             return;
         }
         UserRegister user = MaybeUser.get();
@@ -95,14 +95,14 @@ public class PasswordResetServiceImpl implements PasswordResetService {
            mailMessage.setText(
                    "Someone requested a password reset for your account.\n\n" +
                            "Click the link below to set a new password:\n" +
-                           resetUrl + "/reset-password?token=" + tokenValue + "\n\n" +
+                           resetUrl + "\n\n" +
                            "This link expires in " + tokenValidityMinutes + " minutes.\n" +
                            "If you didn't request this, you can safely ignore this email."
            );
            MailSender.send(mailMessage);
        }
         catch(Exception e){
-           log.info("failed to send reset password mail to {}",toAddress,e);
+           log.error("failed to send reset password mail to {}",toAddress,e);
         }
     }
 }
