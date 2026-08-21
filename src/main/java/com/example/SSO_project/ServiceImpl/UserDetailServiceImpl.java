@@ -1,7 +1,9 @@
 package com.example.SSO_project.ServiceImpl;
 
 import com.example.SSO_project.Repository.UserRepository;
+import com.example.SSO_project.Service.UserCacheService;
 import com.example.SSO_project.Service.UserDetailService;
+import com.example.SSO_project.domain.CachedUser;
 import com.example.SSO_project.domain.User;
 import com.example.SSO_project.domain.UserRegister;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ public class UserDetailServiceImpl implements UserDetailService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserCacheService userCacheService;
 
     @Override
     public User authenticate(String username, String password) {
@@ -31,18 +34,22 @@ public class UserDetailServiceImpl implements UserDetailService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserRegister entity = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("username not found: " + username));
+        CachedUser cached = userCacheService.findUser(username);   // Redis-backed lookup
 
-        if (entity.getPassword() == null) {
+        if (cached == null) {
+            throw new UsernameNotFoundException("username not found: " + username);
+        }
+        if (cached.getPassword() == null) {
             throw new UsernameNotFoundException(
                     "user registered via external provider; please sign in with that provider");
         }
 
+        // UserDetails is rebuilt from the cached snapshot on every call —
+        // Spring Security types never touch Redis.
         return org.springframework.security.core.userdetails.User.builder()
-                .username(entity.getUsername())
-                .password(entity.getPassword())
-                .roles(entity.getRole().name())
+                .username(cached.getUsername())
+                .password(cached.getPassword())
+                .roles(cached.getRole())
                 .build();
     }
 }

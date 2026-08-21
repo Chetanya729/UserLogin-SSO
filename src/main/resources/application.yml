@@ -55,11 +55,14 @@ spring:
           connectiontimeout: 5000
           timeout: 5000
           writetimeout: 5000
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      timeout: 2000
 app:
   remember-me:
     key: ${APP_REMEMBER_KEY}
-
-
 logging:
   level:
     root: INFO
