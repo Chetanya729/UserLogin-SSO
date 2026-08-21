@@ -23,6 +23,7 @@
         <span class="label">Role</span>
         <span class="value" sec:authentication="principal.authorities">[ROLE_USER]</span>
     </div>
+    <a th:href="@{/profile}" class="btn btn-secondary">View profile</a>
 
     <form th:action="@{/logout}" method="post">
         <button type="submit" class="btn btn-secondary">Sign out</button>
