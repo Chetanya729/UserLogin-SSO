@@ -26,7 +26,7 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomOidcUserService customOidcUserService;
     private final RoleBasedAuthenticationSuccessHandler successHandler;
-    @Value("${APP_REMEMBER_KEY}")
+    @Value("${app.remember-me.key}")
     private String rememberMeKey;
     private final CustomPersistentTokenRepository persistentTokenRepository;
 
