@@ -55,6 +55,9 @@ spring:
           connectiontimeout: 5000
           timeout: 5000
           writetimeout: 5000
+app:
+  remember-me:
+    key: ${APP_REMEMBER_KEY}
 
 
 logging:

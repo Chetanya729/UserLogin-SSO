@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My profile</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<main class="card">
+    <div class="brand">S</div>
+    <div class="card-header center">
+        <h1>My profile</h1>
+        <p class="subtitle">Your account details</p>
+    </div>
+
+    <div class="info-panel">
+        <span class="label">Username</span>
+        <span class="value" th:text="${user.username}">username</span>
+    </div>
+    <div class="info-panel">
+        <span class="label">Email</span>
+        <span class="value" th:text="${user.email}">email</span>
+    </div>
+    <div class="info-panel">
+        <span class="label">Role</span>
+        <span class="value" th:text="${user.role}">role</span>
+    </div>
+    <div class="info-panel">
+        <span class="label">Signed up via</span>
+        <span class="value" th:text="${user.provider}">provider</span>
+    </div>
+
+    <div class="actions">
+        <a th:href="@{/home}" class="btn btn-secondary">Back to home</a>
+    </div>
+</main>
+</body>
+</html>

@@ -23,7 +23,7 @@ spring:
             client-secret: ${FACEBOOK_CLIENT_SECRET}
 app:
   remember-me:
-    key: ${APP_REMEMBER_KEY:rl/awgvnMXuH9qcAjipL6u1tye+JjIq1l1FI/0NOHb4=}
+    key: ${APP_REMEMBER_KEY}
 
 logging:
   level:
