@@ -21,6 +21,9 @@ spring:
           facebook:
             client-id: ${FACEBOOK_CLIENT_ID}
             client-secret: ${FACEBOOK_CLIENT_SECRET}
+app:
+  remember-me:
+    key: ${APP_REMEMBER_KEY:rl/awgvnMXuH9qcAjipL6u1tye+JjIq1l1FI/0NOHb4=}
 
 logging:
   level:
