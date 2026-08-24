@@ -9,6 +9,7 @@ import org.springframework.data.redis.serializer.GenericJacksonJsonRedisSerializ
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import tools.jackson.databind.DefaultTyping;
+import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 
 import java.time.Duration;
@@ -19,9 +20,7 @@ public class RedisCacheConfig {
     @Bean
     public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
 
-        // 1. Build the Jackson-3-based value serializer. We customize the mapper the
-        //    serializer creates internally: register modules (java.time etc.) and enable
-        //    default typing so the JSON carries an @class marker for deserialization.
+        ObjectMapper objectMapper = new ObjectMapper();
         GenericJacksonJsonRedisSerializer valueSerializer =
                 GenericJacksonJsonRedisSerializer.builder()
                         .customize(jackson -> jackson
@@ -32,8 +31,6 @@ public class RedisCacheConfig {
                                                 .build(),
                                         DefaultTyping.NON_FINAL))
                         .build();
-
-        // 2. Defaults applied to every cache this manager creates.
         RedisCacheConfiguration defaults = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofMinutes(10))
                 .disableCachingNullValues()
@@ -42,7 +39,6 @@ public class RedisCacheConfig {
                 .serializeValuesWith(RedisSerializationContext.SerializationPair
                         .fromSerializer(valueSerializer));
 
-        // 3. The manager Spring's @Cacheable machinery will use.
         return RedisCacheManager.builder(connectionFactory)
                 .cacheDefaults(defaults)
                 .build();

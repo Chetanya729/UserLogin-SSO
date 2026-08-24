@@ -248,6 +248,12 @@ input[type="password"]:focus {
     margin-top: 0.2rem;
 }
 
+.field-hint {
+    color: var(--muted);
+    font-size: 0.75rem;
+    margin-top: 0.2rem;
+}
+
 .info-panel {
     padding: 1rem 1.15rem;
     background: var(--info-bg);

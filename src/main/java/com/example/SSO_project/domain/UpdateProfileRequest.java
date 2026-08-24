@@ -1,14 +1,18 @@
 package com.example.SSO_project.domain;
 
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CachedUser {
-    private String username;
-    private String password;
-    private String role;
+public class UpdateProfileRequest {
+    private String newUsername;
+    private String currentPassword;
+    private String newEmail;
+
 }

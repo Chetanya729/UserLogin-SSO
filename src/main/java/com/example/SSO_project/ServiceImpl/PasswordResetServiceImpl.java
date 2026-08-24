@@ -5,6 +5,7 @@ import com.example.SSO_project.Exception.PasswordMismatchException;
 import com.example.SSO_project.Repository.PasswordResetRepository;
 import com.example.SSO_project.Repository.UserRepository;
 import com.example.SSO_project.Service.PasswordResetService;
+import com.example.SSO_project.Service.UserCacheService;
 import com.example.SSO_project.domain.PasswordResetToken;
 import com.example.SSO_project.domain.UserRegister;
 
@@ -30,6 +31,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     private final PasswordResetRepository passwordResetRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final UserCacheService userCacheService;
 
     @Value("${app.password-reset.token-validity-minutes:15}")
     private long tokenValidityMinutes;
@@ -80,6 +82,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
 
         token.setUsed(true);
         passwordResetRepository.save(token);
+        userCacheService.evictUser(user.getUsername());
     }
 
     private void sendEmail(String toAddress, String tokenValue) {

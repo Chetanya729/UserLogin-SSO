@@ -15,14 +15,9 @@
         <p class="subtitle">Your account details</p>
     </div>
 
-    <div class="info-panel">
-        <span class="label">Username</span>
-        <span class="value" th:text="${user.username}">username</span>
-    </div>
-    <div class="info-panel">
-        <span class="label">Email</span>
-        <span class="value" th:text="${user.email}">email</span>
-    </div>
+    <div th:if="${error}" class="alert alert-error" th:text="${error}">error</div>
+    <div th:if="${param.updated}" class="alert alert-success">Profile updated.</div>
+
     <div class="info-panel">
         <span class="label">Role</span>
         <span class="value" th:text="${user.role}">role</span>
@@ -31,6 +26,44 @@
         <span class="label">Signed up via</span>
         <span class="value" th:text="${user.provider}">provider</span>
     </div>
+    <div th:if="${user.provider.name() != 'LOCAL'}">
+        <div class="info-panel">
+            <span class="label">Username</span>
+            <span class="value" th:text="${user.username}">username</span>
+        </div>
+        <div class="info-panel">
+            <span class="label">Email</span>
+            <span class="value" th:text="${user.email}">email</span>
+        </div>
+        <p class="subtitle center" style="margin-top: 1rem;">
+            These details are managed by your sign-in provider.
+        </p>
+    </div>
+
+    <form th:if="${user.provider.name() == 'LOCAL'}"
+          th:action="@{/profile}" method="post">
+
+        <div class="field">
+            <label for="newUsername">Username</label>
+            <input type="text" id="newUsername" name="newUsername"
+                   th:value="${user.username}" autocomplete="username" required>
+        </div>
+
+        <div class="field">
+            <label for="newEmail">Email</label>
+            <input type="email" id="newEmail" name="newEmail"
+                   th:value="${user.email}" autocomplete="email" required>
+        </div>
+
+        <div class="field">
+            <label for="currentPassword">Current password</label>
+            <input type="password" id="currentPassword" name="currentPassword"
+                   autocomplete="current-password" required>
+            <span class="field-hint">Required to confirm it's really you.</span>
+        </div>
+
+        <button type="submit" class="btn">Save changes</button>
+    </form>
 
     <div class="actions">
         <a th:href="@{/home}" class="btn btn-secondary">Back to home</a>
