@@ -62,8 +62,7 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfo -> userInfo
                                 .oidcUserService(customOidcUserService)
                                 .userService(customOAuth2UserService))
-                        .successHandler(successHandler))
-                .csrf(AbstractHttpConfigurer::disable);
+                        .successHandler(successHandler));
         return http.build();
     }
 }
