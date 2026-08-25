@@ -13,6 +13,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
+
 @Entity
 @Table(name = "users")
 @Data
@@ -29,11 +31,15 @@ public class UserRegister {
     @Column(unique = true, nullable = false)
     private String email;
     private String password;
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, columnDefinition = "VARCHAR(20)")
     private ROLE role;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, columnDefinition = "VARCHAR(20)")
     private PROVIDER provider;
+    @Column(unique = true, nullable = false)
+    private boolean twoFactorEnabled;
 
 }

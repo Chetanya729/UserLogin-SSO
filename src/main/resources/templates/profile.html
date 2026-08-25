@@ -17,6 +17,12 @@
 
     <div th:if="${error}" class="alert alert-error" th:text="${error}">error</div>
     <div th:if="${param.updated}" class="alert alert-success">Profile updated.</div>
+    <div th:if="${param.twoFactorOn}" class="alert alert-success">
+        Two-factor authentication is on. You'll get a code by email each time you sign in.
+    </div>
+    <div th:if="${param.twoFactorOff}" class="alert alert-success">
+        Two-factor authentication is off.
+    </div>
 
     <div class="info-panel">
         <span class="label">Role</span>
@@ -64,6 +70,41 @@
 
         <button type="submit" class="btn">Save changes</button>
     </form>
+
+    <div th:if="${user.provider.name() == 'LOCAL'}">
+        <div class="divider">Security</div>
+
+        <div class="info-panel">
+            <span class="label">Two-factor authentication</span>
+            <span class="value">
+                <span th:if="${user.twoFactorEnabled}" class="badge">On</span>
+                <span th:unless="${user.twoFactorEnabled}">Off</span>
+            </span>
+        </div>
+
+        <p class="field-hint" th:unless="${user.twoFactorEnabled}">
+            Adds a second step at sign-in: we email you a 6-digit code that expires in 5 minutes.
+        </p>
+        <p class="field-hint" th:if="${user.twoFactorEnabled}">
+            Codes are sent to <span th:text="${user.email}">your email</span>. Keep that
+            inbox reachable — there's no recovery code yet.
+        </p>
+
+        <form th:action="@{/profile/two-factor}" method="post">
+            <input type="hidden" name="enabled" th:value="${!user.twoFactorEnabled}">
+
+            <div class="field">
+                <label for="twoFactorPassword">Current password</label>
+                <input type="password" id="twoFactorPassword" name="currentPassword"
+                       autocomplete="current-password" required>
+            </div>
+
+            <button type="submit" class="btn btn-secondary"
+                    th:text="${user.twoFactorEnabled} ? 'Turn off two-factor' : 'Turn on two-factor'">
+                Turn on two-factor
+            </button>
+        </form>
+    </div>
 
     <div class="actions">
         <a th:href="@{/home}" class="btn btn-secondary">Back to home</a>

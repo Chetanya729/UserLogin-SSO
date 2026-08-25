@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
@@ -55,6 +56,25 @@ public class ProfileController {
 
         return "redirect:/profile?updated";
     }
+    @PostMapping("/profile/two-factor")
+    public String toggleTwoFactor(@RequestParam boolean enabled,
+                                  @RequestParam String currentPassword,
+                                  Authentication authentication,
+                                  Model model) {
+
+        UserRegister user = loadCurrentUser(authentication);
+
+        try {
+            userProfileUpdateService.setTwoFactorEnabled(user.getUsername(), enabled, currentPassword);
+        } catch (InvalidCredentialsException e) {
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("user", user);
+            return "profile";
+        }
+
+        return "redirect:/profile?" + (enabled ? "twoFactorOn" : "twoFactorOff");
+    }
+
     private UserRegister loadCurrentUser(Authentication auth) {
         Object principal = auth.getPrincipal();
 

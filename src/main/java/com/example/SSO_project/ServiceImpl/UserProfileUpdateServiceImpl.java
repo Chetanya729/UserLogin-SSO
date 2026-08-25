@@ -56,4 +56,28 @@ public class UserProfileUpdateServiceImpl implements UserProfileUpdateService {
 
         userCacheService.evictUser(currUsername);
     }
+
+    @Override
+    @Transactional
+    public void setTwoFactorEnabled(String currUsername, boolean enabled, String currentPassword) {
+
+        UserRegister user = userRepository.findByUsername(currUsername)
+                .orElseThrow(() -> new IllegalStateException(
+                        "Authenticated user not found in DB: " + currUsername));
+
+        if (user.getPassword() == null) {
+            throw new InvalidCredentialsException(
+                    "External-provider accounts already use their provider's two-factor settings.");
+        }
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new InvalidCredentialsException("Current password is incorrect.");
+        }
+
+        user.setTwoFactorEnabled(enabled);
+        userRepository.save(user);
+
+        // No cache eviction needed: CachedUser holds username, password and role,
+        // none of which changed here. Add one if that snapshot ever grows to
+        // include the two-factor flag.
+    }
 }

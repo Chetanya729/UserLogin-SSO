@@ -67,6 +67,8 @@ spring:
 app:
   remember-me:
     key: ${APP_REMEMBER_KEY}
+  otp:
+    validity-minutes: 5
 logging:
   level:
     root: INFO
