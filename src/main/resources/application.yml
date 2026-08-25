@@ -18,7 +18,7 @@ spring:
       maximum-pool-size: 5
   security:
     jwt:
-      secret-key: "3+kOi4rFKIYEvkL5ViNC0OvX9yIYBGsx6igcYz3mHkg="
+      secret-key: ${JWT_SECRET_KEY}
       expiration: 3600000
     oauth2:
       client:
@@ -38,7 +38,7 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
-    baseline-version: 2
+    baseline-version: 1
   jpa:
     hibernate:
       ddl-auto: validate

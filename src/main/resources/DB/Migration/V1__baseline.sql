@@ -26,8 +26,6 @@ CREATE TABLE password_reset_token (
         FOREIGN KEY (user_id) REFERENCES users (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Backs Spring Security's persistent remember-me tokens.
--- Not a JPA entity: written directly by CustomPersistentTokenRepository.
 CREATE TABLE persistent_logins (
     username  VARCHAR(64) NOT NULL,
     series    VARCHAR(64) NOT NULL,
