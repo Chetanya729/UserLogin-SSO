@@ -1,0 +1,3 @@
+ALTER TABLE users ADD COLUMN created_at DATETIME(6) NULL;
+UPDATE users SET created_at = '2026-08-01 00:00:00';
+ALTER TABLE users MODIFY COLUMN created_at DATETIME(6) NOT NULL;
