@@ -76,8 +76,5 @@ public class UserProfileUpdateServiceImpl implements UserProfileUpdateService {
         user.setTwoFactorEnabled(enabled);
         userRepository.save(user);
 
-        // No cache eviction needed: CachedUser holds username, password and role,
-        // none of which changed here. Add one if that snapshot ever grows to
-        // include the two-factor flag.
     }
 }

@@ -63,16 +63,13 @@ class UserProfileUpdateServiceImplTest {
     @Test
     @DisplayName("changing only the email saves the user and evicts the cache")
     void updatesEmail() {
-        // Arrange — describe the world the method will find.
         UserRegister user = existingUser();
         when(userRepository.findByUsername(USERNAME)).thenReturn(Optional.of(user));
         when(passwordEncoder.matches(RAW_PASSWORD, HASH)).thenReturn(true);
         when(userRepository.existsByEmail("new@example.com")).thenReturn(false);
 
-        // Act
         service.updateUserProfile(USERNAME, request(USERNAME, "new@example.com", RAW_PASSWORD));
 
-        // Assert — state that changed, plus the collaborators that were called.
         assertThat(user.getEmail()).isEqualTo("new@example.com");
         assertThat(user.getUsername()).isEqualTo(USERNAME);
         verify(userRepository).save(user);
@@ -90,7 +87,6 @@ class UserProfileUpdateServiceImplTest {
                 .isInstanceOf(InvalidCredentialsException.class)
                 .hasMessageContaining("incorrect");
 
-        // The important half: failing loudly is not enough, it must also change nothing.
         verify(userRepository, never()).save(any());
         verifyNoInteractions(userCacheService);
     }
