@@ -31,8 +31,6 @@ public class UserRegister {
     @Column(unique = true, nullable = false)
     private String email;
     private String password;
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private Instant createdAt;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, columnDefinition = "VARCHAR(20)")
     private ROLE role;

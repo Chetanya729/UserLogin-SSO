@@ -44,8 +44,6 @@ public class UserDetailServiceImpl implements UserDetailService {
                     "user registered via external provider; please sign in with that provider");
         }
 
-        // UserDetails is rebuilt from the cached snapshot on every call —
-        // Spring Security types never touch Redis.
         return org.springframework.security.core.userdetails.User.builder()
                 .username(cached.getUsername())
                 .password(cached.getPassword())
