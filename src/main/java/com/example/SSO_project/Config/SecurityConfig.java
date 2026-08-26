@@ -6,17 +6,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.JdbcTemplate;
+
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
-import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
-import javax.sql.DataSource;
+
+
 
 @Configuration
 @EnableWebSecurity
@@ -36,7 +34,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http)  {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/redis-test").permitAll()
@@ -47,6 +45,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/register", "/register/**").permitAll()
                         .requestMatchers("/forgot-password/**").permitAll()
                         .requestMatchers("/reset-password/**").permitAll()
+                        .requestMatchers("/verify-otp/**").permitAll()
                         .anyRequest().authenticated())
                 .rememberMe(rm -> rm.key(rememberMeKey).tokenRepository(persistentTokenRepository).tokenValiditySeconds(1209600))
                 .formLogin(form -> form

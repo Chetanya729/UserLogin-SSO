@@ -108,7 +108,13 @@ public class OtpServiceImpl implements OtpService {
                 b == null ? new byte[0] : b.getBytes(StandardCharsets.UTF_8));
     }
 
-    private String otpKey(String username)      { return "otp:" + username; }
-    private String attemptsKey(String username) { return "otp:attempts:" + username; }
-    private String resendKey(String username)   { return "otp:resend:" + username; }
+    private String otpKey(String username)      {
+        return "otp:" + username;
+    }
+    private String attemptsKey(String username) {
+        return "otp:attempts:" + username;
+    }
+    private String resendKey(String username)   {
+        return "otp:resend:" + username;
+    }
 }

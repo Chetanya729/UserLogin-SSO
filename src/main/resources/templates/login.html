@@ -19,6 +19,7 @@
     <div th:if="${param.registered}" class="alert alert-success">Account created. Please sign in.</div>
     <div th:if="${param.reset}" class="alert alert-success">Password updated. Please sign in with your new password.</div>
     <div th:if="${param.usernameChanged}" class="alert alert-success">Username updated. Please sign in with your new username.</div>
+    <div th:if="${param.otpLocked}" class="alert alert-error">Too many incorrect codes. Please sign in again.</div>
 
     <form th:action="@{/login}" method="post">
         <div class="field">

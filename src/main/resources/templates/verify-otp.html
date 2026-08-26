@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Enter your code</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<main class="card">
+    <div class="brand">S</div>
+    <div class="card-header center">
+        <h1>Check your email</h1>
+        <p class="subtitle">
+            We sent a 6-digit code to
+            <strong th:text="${maskedEmail}">y•••@example.com</strong>
+        </p>
+    </div>
+
+    <div th:if="${error}" class="alert alert-error" th:text="${error}">error</div>
+    <div th:if="${param.resent}" class="alert alert-success">New code sent.</div>
+    <div th:if="${param.cooldown}" class="alert alert-error">
+        Please wait a moment before requesting another code.
+    </div>
+
+    <form th:action="@{/verify-otp}" method="post">
+        <div class="field">
+            <label for="otp">Verification code</label>
+            <input type="text" id="otp" name="otp"
+                   class="otp-input"
+                   inputmode="numeric"
+                   pattern="[0-9]{6}"
+                   maxlength="6"
+                   autocomplete="one-time-code"
+                   autofocus
+                   required>
+            <span class="field-hint">The code expires 5 minutes after it was sent.</span>
+        </div>
+
+        <button type="submit" class="btn">Verify and sign in</button>
+    </form>
+
+    <div class="divider">or</div>
+    <form th:action="@{/verify-otp/resend}" method="post">
+        <button type="submit" class="btn btn-secondary">Send a new code</button>
+    </form>
+
+    <p class="footer-link">
+        Didn't mean to sign in? <a th:href="@{/login}">Back to sign in</a>
+    </p>
+</main>
+</body>
+</html>

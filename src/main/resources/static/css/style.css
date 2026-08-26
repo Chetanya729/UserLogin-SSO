@@ -254,6 +254,15 @@ input[type="password"]:focus {
     margin-top: 0.2rem;
 }
 
+.otp-input {
+    font-size: 1.5rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: 0.4em;
+    text-align: center;
+    padding: 0.8rem 0.5rem;
+    text-indent: 0.4em; /* offsets the trailing letter-space so digits look centred */
+}
+
 .info-panel {
     padding: 1rem 1.15rem;
     background: var(--info-bg);
